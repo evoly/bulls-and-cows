@@ -1,0 +1,47 @@
+{
+  "name": "bulls-and-cows",
+  "version": "1.0.0",
+  "description": "A simple web-based implementation of the classic game 'Bulls and Cows', where players guess a secret number based on feedback provided after each guess.",
+  "main": "index.ts",
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css,json,md}": "prettier --write"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "./node_modules/.bin/tsc6 && vite build",
+    "typecheck": "./node_modules/.bin/tsc6 --noEmit",
+    "lint": "eslint \"**/*.ts\"",
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evoly/bulls-and-cows.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "homepage": "https://github.com/evoly/bulls-and-cows#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^8.3.6",
+    "vite-plugin-checker": "^0.14.5",
+    "vitest": "^5.1.0"
+  }
+}
