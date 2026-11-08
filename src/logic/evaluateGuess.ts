@@ -1,5 +1,6 @@
 type Score = { bulls: number; cows: number };
 
-export const evaluateGuess = (secret: string[], guess: string[]): Score => {
-  throw new Error(`evaluateGuess not implemented for ${secret} and ${guess}`);
-};
+export const evaluateGuess = (secret: string[], guess: string[]): Score => ({
+  bulls: secret.filter((item, index) => item === guess[index]).length,
+  cows: secret.filter((item, index) => item !== guess[index] && guess.includes(item)).length,
+});
