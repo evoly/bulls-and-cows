@@ -7,10 +7,10 @@ type Radix = 'bin' | 'oct' | 'dec' | 'hex';
 const fixedRandom = () => 0.5;
 
 const testCases: { base: Radix; allowedDigits: string[] }[] = [
-  { base: 'bin', allowedDigits: ['0', '1'] },
-  { base: 'oct', allowedDigits: '01234567'.split('') },
-  { base: 'dec', allowedDigits: '0123456789'.split('') },
-  { base: 'hex', allowedDigits: '0123456789abcdef'.split('') },
+    { base: 'bin', allowedDigits: ['0', '1'] },
+    { base: 'oct', allowedDigits: '01234567'.split('') },
+    { base: 'dec', allowedDigits: '0123456789'.split('') },
+    { base: 'hex', allowedDigits: '0123456789abcdef'.split('') },
 ];
 
 describe('generateSecret', () => {
