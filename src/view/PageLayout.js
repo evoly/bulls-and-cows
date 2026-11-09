@@ -1,5 +1,6 @@
 import { createEl } from './../helpers';
 import { NewGameButton, LeaderboardButton } from './components/Buttons';
+import { GuessForm } from './GuessForm';
 
 const Header = ({ onNewGame, onShowLeaderboard }) => {
     const header = createEl('header', { className: 'header container' });
@@ -23,6 +24,7 @@ const mainContent = () => {
         'Each guess reveals how many symbols are in the right position and how many are correct but misplaced.';
 
     main.append(title, descr1, descr2);
+    main.append(GuessForm());
     return main;
 };
 
