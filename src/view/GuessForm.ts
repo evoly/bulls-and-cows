@@ -31,7 +31,6 @@ const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButt
     }
 
     if (newGuess.length === guessLength) {
-        console.log('end of round');
         const submit = buttons.find((button) => button.type === 'submit');
         if (submit) {
             submit.disabled = false;
@@ -73,7 +72,10 @@ const Keyboard = (buttons: HTMLButtonElement[]) => {
 const CurrentGuess = (inputs: HTMLInputElement[]) => {
     const card = createEl('div', { className: 'card', ariaLabel: 'Your guesses' });
 
-    state.tries += 1;
+    if (state.isStarted) {
+        state.tries += 1;
+    }
+
     const n: HTMLElement = createEl('div', { className: 'card-number', textContent: `${state.tries + 1}` });
 
     const fieldset: HTMLElement = createEl('fieldset');
@@ -90,13 +92,22 @@ const CurrentGuess = (inputs: HTMLInputElement[]) => {
     return card;
 };
 
-export const GuessForm = (): HTMLFormElement => {
-    const digits = BASES_CONFIG[state.currentBase].digits;
-    const keyboardButtons = createKeboardButtons(digits);
-    const inputBoxes = createInputBoxes(state.guessLength);
-
+export const GuessForm = (): { container: HTMLFormElement; update: () => void } => {
     const container = createEl('form', { className: 'game-form', id: 'game-form' });
-    container.append(CurrentGuess(inputBoxes), Keyboard(keyboardButtons));
+
+    let inputBoxes: HTMLInputElement[] = [];
+    let keyboardButtons: HTMLButtonElement[] = [];
+
+    const update = () => {
+        const digits = BASES_CONFIG[state.currentBase].digits;
+
+        keyboardButtons = createKeboardButtons(digits);
+        inputBoxes = createInputBoxes(state.guessLength);
+
+        container.replaceChildren(CurrentGuess(inputBoxes), Keyboard(keyboardButtons));
+    };
+
+    update();
 
     // Удаляем предыдущий обработчик
     keyboardController?.abort();
@@ -153,5 +164,5 @@ export const GuessForm = (): HTMLFormElement => {
         // TODO: evaluate guess
     });
 
-    return container;
+    return { container, update };
 };

@@ -3,12 +3,14 @@ import { BASES_CONFIG } from '../../state/stateConfig';
 import { BaseKey } from '../../state/stateConfig';
 import { state } from '../../state/state';
 
+type OptionsProps = { onChange?: () => void };
+
 const MIN_LENGTH = 2;
 const MAX_LENGTH = 6;
 const lengthOptions = Array.from({ length: MAX_LENGTH - MIN_LENGTH + 1 }, (_, index) => MIN_LENGTH + index);
 const isLengthAllowed = (length: number, base: BaseKey) => length <= BASES_CONFIG[base].value;
 
-export const Options = () => {
+export const Options = ({ onChange }: OptionsProps = {}) => {
     const bases = Object.keys(BASES_CONFIG);
     const { guessLength, currentBase } = state;
 
@@ -98,9 +100,18 @@ export const Options = () => {
         if (target.name === 'length') {
             state.guessLength = Number(target.value);
         }
-
+        onChange?.();
         console.log('state', state);
     });
 
-    return container;
+    const setStarted = (isStarted: boolean) => {
+        fieldsetBase.disabled = isStarted;
+        fieldsetLength.disabled = isStarted;
+
+        h2.textContent = isStarted ? 'Game options' : 'Choose options';
+    };
+
+    setStarted(state.isStarted);
+
+    return { container, setStarted };
 };
