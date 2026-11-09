@@ -1,5 +1,4 @@
 export const createDigitValidator =
     (base: number) =>
-    (char: string): boolean => {
-        throw new Error(`not implemented for ${base} and ${char} `);
-    };
+    (char: string): boolean =>
+        char.length === 1 && parseInt(char, base).toString(base) === char.toLowerCase();
