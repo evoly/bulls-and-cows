@@ -1,10 +1,15 @@
 import { createEl } from './../helpers';
 import { createDigitValidator } from '../logic/createDigitValidator';
+import { evaluateGuess } from '../logic/evaluateGuess';
+import { isValidGuess } from '../logic/isValidGuess';
+
 import { createInputBoxes } from './components/createInputBoxes';
 import { createKeboardButtons } from './components/createKeboardButtons';
 
 import { state } from '../state/state';
 import { BASES_CONFIG } from '../state/stateConfig';
+
+type GuessFormProps = { onHistoryChange: () => void };
 
 let keyboardController: AbortController | null = null; //clean up document.addEventLIstener
 
@@ -15,17 +20,19 @@ const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButt
 
     if (!createDigitValidator(radix)(char)) return;
 
-    if (guess.includes(char)) return;
+    const normalizedChar = char.toLowerCase();
+
+    if (guess.includes(normalizedChar)) return;
     if (guess.length >= guessLength) return;
 
     const numberOfGuess = guess.length;
 
-    const newGuess = [...guess, char];
+    const newGuess = [...guess, normalizedChar];
     state.guess = newGuess;
 
-    inputs[numberOfGuess]!.value = char;
+    inputs[numberOfGuess]!.value = normalizedChar;
 
-    const currentButton = buttons.find((button) => button.dataset.value === char);
+    const currentButton = buttons.find((button) => button.dataset.value === normalizedChar);
     if (currentButton) {
         currentButton.disabled = true;
     }
@@ -35,8 +42,6 @@ const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButt
         if (submit) {
             submit.disabled = false;
         }
-        /* check guess here */
-        // Разблокировать отправку (кнопку Go)
     }
 };
 
@@ -72,10 +77,6 @@ const Keyboard = (buttons: HTMLButtonElement[]) => {
 const CurrentGuess = (inputs: HTMLInputElement[]) => {
     const card = createEl('div', { className: 'card', ariaLabel: 'Your guesses' });
 
-    if (state.isStarted) {
-        state.tries += 1;
-    }
-
     const n: HTMLElement = createEl('div', { className: 'card-number', textContent: `${state.tries + 1}` });
 
     const fieldset: HTMLElement = createEl('fieldset');
@@ -92,7 +93,7 @@ const CurrentGuess = (inputs: HTMLInputElement[]) => {
     return card;
 };
 
-export const GuessForm = (): { container: HTMLFormElement; update: () => void } => {
+export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTMLFormElement; update: () => void } => {
     const container = createEl('form', { className: 'game-form', id: 'game-form' });
 
     let inputBoxes: HTMLInputElement[] = [];
@@ -126,11 +127,21 @@ export const GuessForm = (): { container: HTMLFormElement; update: () => void } 
                 return;
             }
 
+            // if (!state.isStarted) return;
+
             if (e.ctrlKey || e.altKey || e.metaKey) return;
 
             if (e.key === 'Backspace') {
                 e.preventDefault();
                 handleBackspace(inputBoxes, keyboardButtons);
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                if (state.guess.length !== state.guessLength) return;
+
+                e.preventDefault();
+                container.requestSubmit();
                 return;
             }
 
@@ -143,6 +154,7 @@ export const GuessForm = (): { container: HTMLFormElement; update: () => void } 
     );
 
     container.addEventListener('click', (e) => {
+        // if (!state.isStarted) return;
         if (!(e.target instanceof HTMLButtonElement)) return;
 
         const target = e.target;
@@ -161,7 +173,33 @@ export const GuessForm = (): { container: HTMLFormElement; update: () => void } 
 
     container.addEventListener('submit', (e) => {
         e.preventDefault();
-        // TODO: evaluate guess
+        const { guess, secret, guessLength, history, currentBase } = state;
+        const base = BASES_CONFIG[currentBase].value;
+
+        if (!isValidGuess(guess, guessLength, base)) return;
+        state.tries += 1;
+
+        const { bulls, cows } = evaluateGuess(secret, guess);
+
+        if (bulls === guessLength) {
+            console.log('Gz!');
+
+            //add timer
+
+            //  const bestGames = JSON.parse(localStorage.getItem('bestgames')) ?? [];
+
+            //add modal
+            //add localstorage
+            return;
+        }
+
+        const roundResult = { guess, bulls, cows };
+        state.history = [...history, roundResult];
+        console.log('state', state);
+
+        state.guess = [];
+        update();
+        onHistoryChange();
     });
 
     return { container, update };
