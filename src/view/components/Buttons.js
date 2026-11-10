@@ -9,7 +9,8 @@ const Button = ({ classes, text, onClick }) => {
 
 export default Button;
 
-export const StartGameButton = (onStartGame) => Button({ classes: 'btn', text: 'Start Game', onClick: onStartGame });
+export const StartGameButton = (onStartGame) =>
+    Button({ classes: 'btn-start', text: 'Start Game', onClick: onStartGame });
 
 export const NewGameButton = (onNewGame) => Button({ classes: 'btn', text: 'New Game', onClick: onNewGame });
 

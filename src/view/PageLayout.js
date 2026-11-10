@@ -9,6 +9,17 @@ import { generateSecret } from '../logic/generateSecret';
 
 import { state } from '../state/state';
 
+const gameInfo = () => {
+    const line = createEl('div', { className: 'game-info' });
+    const hint = createEl('div', { className: 'game-info-item' });
+    const span1 = createEl('span', { className: '', textContent: ' 🐂 - right place;' });
+    const span2 = createEl('span', { className: '', textContent: '🐄 - wrong place' });
+    hint.append(span1, span2);
+    line.append(hint);
+
+    return line;
+};
+
 const Header = ({ onNewGame, onShowLeaderboard }) => {
     const header = createEl('header', { className: 'header container' });
     header.append(NewGameButton(onNewGame), LeaderboardButton(onShowLeaderboard));
@@ -29,6 +40,8 @@ const mainContent = () => {
     const descr2 = createEl('p', { className: 'sub-title' });
     descr2.textContent =
         'Each guess reveals how many symbols are in the right position and how many are correct but misplaced.';
+
+    const gameBoard = createEl('section', { className: 'game-board' });
 
     const historyContainer = createEl('section', { className: 'history' });
 
@@ -51,12 +64,19 @@ const mainContent = () => {
 
         options.setStarted(state.isStarted);
         guessForm.update();
+
+        gameBoard.prepend(gameInfo());
+        startButton.classList.add('animate');
+
+        setTimeout(() => {
+            startButton.classList.add('hidden');
+        }, 1200);
     };
 
     const startButton = StartGameButton(handleStartGame);
 
-    main.append(title, descr1, descr2);
-    main.append(options.container, historyContainer, guessForm.container, startButton);
+    gameBoard.append(historyContainer, guessForm.container, startButton);
+    main.append(title, descr1, descr2, options.container, gameBoard);
     return main;
 };
 

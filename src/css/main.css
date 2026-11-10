@@ -111,6 +111,16 @@ p {
     font-weight: 500;
 }
 
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.game-info-item {
+    display: flex;
+    gap: 15px;
+}
+
 .card {
     display: flex;
     align-items: center;
@@ -310,6 +320,26 @@ p {
     text-align: center;
     background-color: var(--card-border);
     padding: 15px 50px;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.btn-start {
+    padding: 15px 45px;
+    &.animate {
+        animation: fadeIn 1.2s infinite;
+    }
+
+    &.hidden {
+        display: none;
+    }
 }
 
 /*modal*/
