@@ -54,4 +54,17 @@ describe('evaluateGuess', () => {
             cows: 2,
         });
     });
+    it('compares hex digits case-insensitively', () => {
+        expect(evaluateGuess(['a', 'b'], ['A', 'B'])).toEqual({
+            bulls: 2,
+            cows: 0,
+        });
+    });
+
+    it('counts cows case-insensitively', () => {
+        expect(evaluateGuess(['a', 'b'], ['B', 'A'])).toEqual({
+            bulls: 0,
+            cows: 2,
+        });
+    });
 });
