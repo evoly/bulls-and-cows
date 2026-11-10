@@ -127,7 +127,7 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
                 return;
             }
 
-            // if (!state.isStarted) return;
+            if (!state.isStarted) return;
 
             if (e.ctrlKey || e.altKey || e.metaKey) return;
 
@@ -154,7 +154,7 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
     );
 
     container.addEventListener('click', (e) => {
-        // if (!state.isStarted) return;
+        if (!state.isStarted) return;
         if (!(e.target instanceof HTMLButtonElement)) return;
 
         const target = e.target;

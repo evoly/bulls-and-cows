@@ -9,8 +9,10 @@ const Button = ({ classes, text, onClick }) => {
 
 export default Button;
 
+export const StartGameButton = (onStartGame) => Button({ classes: 'btn', text: 'Start Game', onClick: onStartGame });
+
 export const NewGameButton = (onNewGame) => Button({ classes: 'btn', text: 'New Game', onClick: onNewGame });
 
 export const LeaderboardButton = (onSwowModal) => Button({ classes: 'btn', text: 'Leaderboard', onClick: onSwowModal });
 
-// export const CloseButton = (onClose) => Button({ classes: 'btn', text: 'Close', onClick: onClose });
+export const CloseButton = (onClose) => Button({ classes: 'btn', text: 'Close', onClick: onClose });

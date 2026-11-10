@@ -1,14 +1,13 @@
 import { createEl } from './../helpers';
 
-import { NewGameButton, LeaderboardButton } from './components/Buttons';
+import { NewGameButton, LeaderboardButton, StartGameButton } from './components/Buttons';
 import { GuessForm } from './GuessForm';
 import { Options } from './components/Options';
 import { createHistoryCards } from './components/createHistoryCards';
 
-// import { generateSecret } from '../logic/generateSecret';
+import { generateSecret } from '../logic/generateSecret';
 
 import { state } from '../state/state';
-// import { BASES_CONFIG } from '../state/stateConfig';
 
 const Header = ({ onNewGame, onShowLeaderboard }) => {
     const header = createEl('header', { className: 'header container' });
@@ -40,15 +39,10 @@ const mainContent = () => {
     const guessForm = GuessForm({ onHistoryChange: updateHistory });
     const options = Options({ onChange: () => guessForm.update() });
 
-    /*
-
     const handleStartGame = () => {
         if (state.isStarted) return;
-        console.log(state)
-        state.secret = generateSecret(
-            state.guessLength,
-            state.currentBase
-        );
+        console.log(state);
+        state.secret = generateSecret(state.guessLength, state.currentBase);
 
         state.guess = [];
         state.history = [];
@@ -60,14 +54,9 @@ const mainContent = () => {
     };
 
     const startButton = StartGameButton(handleStartGame);
-*/
-    main.append(title, descr1, descr2);
-    main.append(options.container, historyContainer, guessForm.container);
 
-    /*
-    state.isStarted = true;
-    options.setStarted(state.isStarted);
-*/
+    main.append(title, descr1, descr2);
+    main.append(options.container, historyContainer, guessForm.container, startButton);
     return main;
 };
 
