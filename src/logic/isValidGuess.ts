@@ -1,5 +1,13 @@
-// import { createDigitValidator } from './createDigitValidator';
+import { createDigitValidator } from './createDigitValidator';
 
 export const isValidGuess = (guess: string[], length: number, base: number): boolean => {
-    throw new Error(`not implemented for ${guess} ${length} ${base}`);
+    if (guess.length !== length) return false;
+
+    const isValidDigit = createDigitValidator(base);
+
+    if (!guess.every(isValidDigit)) return false;
+
+    const uniqueDigits = new Set(guess.map((digit) => digit.toLowerCase()));
+
+    return uniqueDigits.size === length;
 };
