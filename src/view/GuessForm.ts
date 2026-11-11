@@ -9,7 +9,11 @@ import { createKeboardButtons } from './components/createKeboardButtons';
 import { state } from '../state/state';
 import { BASES_CONFIG } from '../state/stateConfig';
 
-type GuessFormProps = { onHistoryChange: () => void };
+type GuessFormProps = {
+    onHistoryChange: () => void;
+    timer: { stop: () => void; getElapsedSeconds: () => number };
+    onWin: () => void;
+};
 
 let keyboardController: AbortController | null = null; //clean up document.addEventLIstener
 
@@ -93,7 +97,11 @@ const CurrentGuess = (inputs: HTMLInputElement[]) => {
     return card;
 };
 
-export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTMLFormElement; update: () => void } => {
+export const GuessForm = ({
+    onHistoryChange,
+    timer,
+    onWin,
+}: GuessFormProps): { container: HTMLFormElement; update: () => void; revealSecret: () => void } => {
     const container = createEl('form', { className: 'game-form', id: 'game-form' });
 
     let inputBoxes: HTMLInputElement[] = [];
@@ -127,7 +135,7 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
                 return;
             }
 
-            if (!state.isStarted) return;
+            if (state.gameStatus !== 'playing') return;
 
             if (e.ctrlKey || e.altKey || e.metaKey) return;
 
@@ -154,7 +162,7 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
     );
 
     container.addEventListener('click', (e) => {
-        if (!state.isStarted) return;
+        if (state.gameStatus !== 'playing') return;
         if (!(e.target instanceof HTMLButtonElement)) return;
 
         const target = e.target;
@@ -173,6 +181,8 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
 
     container.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (state.gameStatus !== 'playing') return;
+
         const { guess, secret, guessLength, history, currentBase } = state;
         const base = BASES_CONFIG[currentBase].value;
 
@@ -182,12 +192,14 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
         const { bulls, cows } = evaluateGuess(secret, guess);
 
         if (bulls === guessLength) {
+            state.gameStatus = 'won';
             console.log('Gz!');
+            timer.stop();
+            onWin();
+            const time = timer.getElapsedSeconds();
+            console.log('time', time);
 
-            //add timer
-
-            //  const bestGames = JSON.parse(localStorage.getItem('bestgames')) ?? [];
-
+            //add timer stop
             //add modal
             //add localstorage
             return;
@@ -202,5 +214,16 @@ export const GuessForm = ({ onHistoryChange }: GuessFormProps): { container: HTM
         onHistoryChange();
     });
 
-    return { container, update };
+    const revealSecret = () => {
+        inputBoxes.forEach((input, index) => {
+            input.value = state.secret[index] ?? '';
+            input.disabled = true;
+        });
+
+        keyboardButtons.forEach((button) => {
+            button.disabled = true;
+        });
+    };
+
+    return { container, update, revealSecret };
 };

@@ -7,6 +7,7 @@
     --btn-hover: --background-color;
     --card-border: #e4dccb;
     --dark-background: #f6efe0;
+    --modalbackprop: #2f2a21f2;
 
     --transition: all ease-in 0.3s;
 
@@ -20,7 +21,6 @@
     --second-color: #6942d517;
     --text-light: #e2e4ee;
     --text-light-xl: #784949;
-    --modalbackprop: #4b384cf0;
 }
 
 * {
@@ -36,6 +36,10 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
+}
+
+.hidden {
+    display: none !important;
 }
 
 html {
@@ -112,13 +116,33 @@ p {
 }
 
 .game-info {
+    align-self: center;
+    width: 260px;
+    max-width: 100%;
+    height: 60px;
+    padding: 7px 15px 7px 15px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    gap: 5px;
+    border: 2px solid var(--btn-text);
+    background-color: var(--btn-background);
+    border-radius: 10px;
+    font-size: 1.6rem;
 }
 .game-info-item {
     display: flex;
-    gap: 15px;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/*timer*/
+
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 1.5rem;
 }
 
 .card {
@@ -332,22 +356,22 @@ p {
 }
 
 .btn-start {
-    padding: 15px 45px;
+    align-self: center;
+    min-width: 260px;
+    height: 60px;
+
     &.animate {
         animation: fadeIn 1.2s infinite;
-    }
-
-    &.hidden {
-        display: none;
     }
 }
 
 /*modal*/
 
 .modal {
-    background-color: var(--modal-background);
-    border: 0;
+    background-color: var(--background-color);
+    border: 3px solid var(--btn-text);
     border-radius: 12px;
+    min-width: 450px;
 
     &::backdrop {
         background-color: var(--modalbackprop);
@@ -375,12 +399,16 @@ p {
     width: 100%;
 
     .btn {
-        background-color: var(--modal-background);
+        background-color: var(--background-color);
 
         &:hover {
             background-color: var(--btn-hover);
         }
     }
+}
+.modal-text-lg {
+    font-size: 2rem;
+    font-size: 600;
 }
 
 /* table */

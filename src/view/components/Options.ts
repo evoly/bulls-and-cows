@@ -10,7 +10,7 @@ const MAX_LENGTH = 6;
 const lengthOptions = Array.from({ length: MAX_LENGTH - MIN_LENGTH + 1 }, (_, index) => MIN_LENGTH + index);
 const isLengthAllowed = (length: number, base: BaseKey) => length <= BASES_CONFIG[base].value;
 
-export const Options = ({ onChange }: OptionsProps = {}) => {
+export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElement, info: HTMLElement) => {
     const bases = Object.keys(BASES_CONFIG);
     const { guessLength, currentBase } = state;
 
@@ -73,7 +73,8 @@ export const Options = ({ onChange }: OptionsProps = {}) => {
     lengthSelector.append(...lengthButtons);
     fieldsetLength.append(legendLength, fakeLegendLength, lengthSelector);
 
-    container.append(h2, fieldsetBase, fieldsetLength);
+    container.append(h2, fieldsetBase, fieldsetLength, startButton, info);
+
     container.addEventListener('change', (event) => {
         const target = event.target;
 
@@ -104,14 +105,12 @@ export const Options = ({ onChange }: OptionsProps = {}) => {
         console.log('state', state);
     });
 
-    const setStarted = (isStarted: boolean) => {
-        fieldsetBase.disabled = isStarted;
-        fieldsetLength.disabled = isStarted;
+    const setStarted = (isReady: boolean) => {
+        fieldsetBase.disabled = !isReady;
+        fieldsetLength.disabled = !isReady;
 
-        h2.textContent = isStarted ? 'Game options' : 'Choose options';
+        h2.textContent = isReady ? 'Game options' : 'Game in progress';
     };
-
-    setStarted(state.isStarted);
 
     return { container, setStarted };
 };

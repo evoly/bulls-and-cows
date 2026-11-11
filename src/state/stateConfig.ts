@@ -2,6 +2,8 @@ export type BaseKey = 'bin' | 'oct' | 'dec' | 'hex';
 
 export type AvailableBases = 2 | 8 | 10 | 16;
 
+export type GameStatus = 'ready' | 'playing' | 'won' | 'gaveUp';
+
 export interface BaseConfig {
     value: AvailableBases;
     label: string; // Для красивого вывода в UI (например, "Hexadecimal") TODO

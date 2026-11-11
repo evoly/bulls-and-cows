@@ -1,28 +1,31 @@
 import { createEl } from './../helpers';
 
-import { NewGameButton, LeaderboardButton, StartGameButton } from './components/Buttons';
+import { LeaderboardButton, GameActionButton } from './components/Buttons';
 import { GuessForm } from './GuessForm';
 import { Options } from './components/Options';
 import { createHistoryCards } from './components/createHistoryCards';
+import { Timer } from './components/Timer';
 
 import { generateSecret } from '../logic/generateSecret';
 
 import { state } from '../state/state';
 
+const timer = Timer();
+
 const gameInfo = () => {
-    const line = createEl('div', { className: 'game-info' });
+    const gameInfo = createEl('div', { className: 'game-info hidden' });
     const hint = createEl('div', { className: 'game-info-item' });
     const span1 = createEl('span', { className: '', textContent: ' 🐂 - right place;' });
     const span2 = createEl('span', { className: '', textContent: '🐄 - wrong place' });
     hint.append(span1, span2);
-    line.append(hint);
 
-    return line;
+    gameInfo.append(hint);
+    return gameInfo;
 };
 
-const Header = ({ onNewGame, onShowLeaderboard }) => {
+const Header = ({ onShowLeaderboard }) => {
     const header = createEl('header', { className: 'header container' });
-    header.append(NewGameButton(onNewGame), LeaderboardButton(onShowLeaderboard));
+    header.append(LeaderboardButton(onShowLeaderboard));
 
     return header;
 };
@@ -49,33 +52,82 @@ const mainContent = () => {
         historyContainer.replaceChildren(...createHistoryCards(state.history));
     };
 
-    const guessForm = GuessForm({ onHistoryChange: updateHistory });
-    const options = Options({ onChange: () => guessForm.update() });
+    const info = gameInfo();
 
     const handleStartGame = () => {
-        if (state.isStarted) return;
+        if (!(state.gameStatus === 'ready')) return;
         console.log(state);
         state.secret = generateSecret(state.guessLength, state.currentBase);
 
         state.guess = [];
         state.history = [];
         state.tries = 0;
-        state.isStarted = true;
+        state.gameStatus = 'playing';
 
-        options.setStarted(state.isStarted);
+        options.setStarted(state.gameStatus === 'ready');
         guessForm.update();
 
-        gameBoard.prepend(gameInfo());
-        startButton.classList.add('animate');
+        timer.start();
 
         setTimeout(() => {
             startButton.classList.add('hidden');
+            info.classList.remove('hidden');
+            updateActionButtons();
+
+            //add giveup bitton to gameBoard here
+
+            // behavior: fill inputBoxes, set gamestatus 'gaveUp' add new game button to gamedoard
         }, 1200);
     };
 
-    const startButton = StartGameButton(handleStartGame);
+    const handleGiveUp = () => {
+        if (state.gameStatus !== 'playing') return;
 
-    gameBoard.append(historyContainer, guessForm.container, startButton);
+        state.gameStatus = 'gaveUp';
+        timer.stop();
+
+        guessForm.revealSecret();
+        updateActionButtons();
+    };
+
+    const handleNewGame = () => {
+        state.guess = [];
+        state.history = [];
+        state.tries = 0;
+        state.gameStatus = 'ready';
+        state.secret = [];
+
+        options.setStarted(state.gameStatus === 'ready');
+
+        startButton.classList.remove('hidden');
+        info.classList.add('hidden');
+
+        guessForm.update();
+
+        console.log('state new g', state);
+    };
+    const startButton = GameActionButton('ready', handleStartGame, 'btn-start');
+
+    const giveUpButton = GameActionButton('playing', handleGiveUp);
+    const newGameButton = GameActionButton('gaveUp', handleNewGame);
+
+    const gameActions = createEl('div', { className: 'game-actions' });
+    gameActions.append(giveUpButton, newGameButton);
+
+    info.prepend(timer.element);
+
+    const updateActionButtons = () => {
+        giveUpButton.classList.toggle('hidden', state.gameStatus !== 'playing');
+
+        newGameButton.classList.toggle('hidden', state.gameStatus !== 'won' && state.gameStatus !== 'gaveUp');
+    };
+
+    updateActionButtons();
+
+    const guessForm = GuessForm({ onHistoryChange: updateHistory, onWin: updateActionButtons, timer: timer });
+    const options = Options({ onChange: () => guessForm.update() }, startButton, info);
+
+    gameBoard.append(historyContainer, guessForm.container, gameActions);
     main.append(title, descr1, descr2, options.container, gameBoard);
     return main;
 };
@@ -83,7 +135,6 @@ const mainContent = () => {
 export default () => {
     return [
         Header({
-            onNewGame: () => {},
             onShowLeaderboard: () => {},
         }),
         mainContent(),

@@ -7,6 +7,7 @@ export const createInputBoxes = (guessLength: number): HTMLInputElement[] => {
             type: 'text',
             className: 'card-input',
             maxLength: 1,
+            readOnly: true,
         });
         // TODO
         input.setAttribute('aria-label', `number ${i}`);

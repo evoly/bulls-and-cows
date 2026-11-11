@@ -1,4 +1,5 @@
 import type { BaseKey } from './stateConfig';
+import { GameStatus } from './stateConfig';
 
 type GuessResult = {
     guess: string[];
@@ -7,7 +8,7 @@ type GuessResult = {
 };
 
 type GameState = {
-    isStarted: boolean;
+    gameStatus: GameStatus;
     currentBase: BaseKey;
     guess: string[];
     history: GuessResult[];
@@ -17,7 +18,7 @@ type GameState = {
 };
 
 export const state: GameState = {
-    isStarted: false,
+    gameStatus: 'ready',
     currentBase: 'hex',
     guess: [],
     secret: [],
