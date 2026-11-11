@@ -376,7 +376,6 @@ p {
 
 .modal {
     min-width: 450px;
-
     &::backdrop {
         background-color: var(--modalbackprop);
     }
@@ -412,6 +411,13 @@ p {
             background-color: var(--btn-hover);
         }
     }
+}
+
+.modal-subtitle {
+    font-size: 1.7rem;
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: pre-line;
 }
 .modal-text-lg {
     font-size: 2.5rem;

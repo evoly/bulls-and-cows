@@ -199,13 +199,13 @@ export const GuessForm = ({
             onWin();
             const time = timer.getElapsedSeconds();
 
-            createWinModal(state.tries, formatTime(time));
+            createWinModal(state.tries, formatTime(time), currentBase);
 
             type Game = {
                 tries: number;
                 date: number;
                 time: number;
-                base: string;
+                base: BaseKey;
                 length: number;
             };
 

@@ -57,12 +57,12 @@ export const createLeaderBoard = () => {
     return createModal([content]);
 };
 
-export const createWinModal = (tries: number, time: string) => {
+export const createWinModal = (tries: number, time: string, base: BaseKey) => {
     const header = createEl('h2');
     header.textContent = 'Congratulations!';
 
-    const text = createEl('p');
-    text.textContent = `You cracked the code!`;
+    const text = createEl('p', { className: 'modal-subtitle' });
+    text.textContent = base === 'bin' ? 'Two possible combinations.\nWhat a challenge! 😏' : 'You cracked the code!';
 
     const info = createEl('div', { className: 'win-info' });
 
