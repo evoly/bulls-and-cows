@@ -4,6 +4,7 @@ import { state } from '../state/state';
 import { BASES_CONFIG, type BaseKey } from '../state/stateConfig';
 import createResultTable, { type LeaderboardData } from './components/ResultTable';
 import createModal from './components/Modal';
+import { createFireworks } from './components/fireworks';
 
 // import { createFireworks } from './fireworks';
 type Game = {
@@ -77,10 +78,17 @@ export const createWinModal = (tries: number, time: string) => {
     infoBlock2.append(span21, span22);
 
     info.append(infoBlock1, infoBlock2);
-
     const modal = createModal([header, text, info]);
 
-    modal.addEventListener('close', stop);
+    const canvas = createEl('canvas', {
+        className: 'fireworks',
+    });
+
+    modal.prepend(canvas);
+    modal.classList.add('modal--celebration');
+
+    const stop = createFireworks(canvas);
+    modal.addEventListener('close', stop, { once: true });
 
     return modal;
 };
