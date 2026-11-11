@@ -183,6 +183,10 @@ p {
 .fieldset-content {
     display: flex;
     gap: 10px;
+    align-items: center;
+}
+.duplicate-note {
+    font-style: italic;
 }
 
 .card-list-item,

@@ -21,6 +21,30 @@ type GuessFormProps = {
 let keyboardController: AbortController | null = null; //clean up document.addEventLIstener
 
 // handlers:
+const updateDuplicateState = (inputs: HTMLInputElement[], buttons: HTMLButtonElement[]) => {
+    const { guess, guessLength, history } = state;
+    const isComplete = guess.length === guessLength;
+    const isDuplicate =
+        isComplete && history.some((entry) => entry.guess.join('').toLowerCase() === guess.join('').toLowerCase());
+
+    const submitButton = buttons.find((button) => button.type === 'submit');
+    if (submitButton) submitButton.disabled = !isComplete || isDuplicate;
+
+    const inputContainer = inputs[0]?.parentElement;
+    const existingNote = inputContainer?.querySelector('.duplicate-note');
+
+    if (isDuplicate && !existingNote) {
+        const note = createEl('span', {
+            className: 'duplicate-note',
+            textContent: "You've tried this one already!",
+        });
+        note.setAttribute('role', 'status');
+        inputContainer?.append(note);
+    } else if (!isDuplicate) {
+        existingNote?.remove();
+    }
+};
+
 const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButtonElement[]) => {
     const radix = BASES_CONFIG[state.currentBase].value;
     const { guess, guessLength } = state;
@@ -44,12 +68,7 @@ const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButt
         currentButton.disabled = true;
     }
 
-    if (newGuess.length === guessLength) {
-        const submit = buttons.find((button) => button.type === 'submit');
-        if (submit) {
-            submit.disabled = false;
-        }
-    }
+    updateDuplicateState(inputs, buttons);
 };
 
 const handleBackspace = (inputs: HTMLInputElement[], buttons: HTMLButtonElement[]) => {
@@ -67,11 +86,7 @@ const handleBackspace = (inputs: HTMLInputElement[], buttons: HTMLButtonElement[
         currentButton.disabled = false;
     }
 
-    const submitButton = buttons.find((button) => button.type === 'submit');
-
-    if (submitButton) {
-        submitButton.disabled = true;
-    }
+    updateDuplicateState(inputs, buttons);
 };
 
 // render:
@@ -152,6 +167,8 @@ export const GuessForm = ({
                 if (state.guess.length !== state.guessLength) return;
 
                 e.preventDefault();
+                const submitButton = keyboardButtons.find((button) => button.type === 'submit');
+                if (submitButton?.disabled) return;
                 container.requestSubmit();
                 return;
             }
