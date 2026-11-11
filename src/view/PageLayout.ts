@@ -1,4 +1,4 @@
-import { createEl } from './../helpers';
+import { createEl } from '../helpers';
 
 import { LeaderboardButton, GameActionButton } from './components/Buttons';
 import { GuessForm } from './GuessForm';
@@ -13,7 +13,7 @@ import { state } from '../state/state';
 
 const timer = Timer();
 
-const gameInfo = () => {
+const gameInfo = (): HTMLElement => {
     const gameInfo = createEl('div', { className: 'game-info hidden' });
     const hint = createEl('div', { className: 'game-info-item' });
     const span1 = createEl('span', { className: '', textContent: ' 🐂 - right place;' });
@@ -24,14 +24,18 @@ const gameInfo = () => {
     return gameInfo;
 };
 
-const Header = ({ onShowLeaderboard }) => {
+type HeaderProps = {
+    onShowLeaderboard: () => void;
+};
+
+const Header = ({ onShowLeaderboard }: HeaderProps): HTMLElement => {
     const header = createEl('header', { className: 'header container' });
     header.append(LeaderboardButton(onShowLeaderboard));
 
     return header;
 };
 
-const mainContent = () => {
+const mainContent = (): HTMLElement => {
     const main = createEl('main', { className: 'container main' });
     const title = createEl('div', { className: 'title' });
     const img = createEl('img', { src: './images/bulls-and-cows-logo.svg', className: 'title-img' });
@@ -65,7 +69,7 @@ const mainContent = () => {
         state.tries = 0;
         state.gameStatus = 'playing';
 
-        options.setStarted(state.gameStatus === 'ready');
+        options.setStarted(false);
         guessForm.update();
 
         timer.start();
@@ -96,7 +100,7 @@ const mainContent = () => {
         state.gameStatus = 'ready';
         state.secret = [];
 
-        options.setStarted(state.gameStatus === 'ready');
+        options.setStarted(true);
 
         startButton.classList.remove('hidden');
         info.classList.add('hidden');
@@ -133,7 +137,7 @@ const mainContent = () => {
     return main;
 };
 
-export default () => {
+export default (): HTMLElement[] => {
     return [
         Header({
             onShowLeaderboard: createLeaderBoard,
