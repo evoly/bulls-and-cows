@@ -189,9 +189,18 @@ export const GuessForm = ({
         const base = BASES_CONFIG[currentBase].value;
 
         if (!isValidGuess(guess, guessLength, base)) return;
+
+        const isDuplicate = history.some(
+            (entry) => entry.guess.join('').toLowerCase() === guess.join('').toLowerCase(),
+        );
+
+        if (isDuplicate) return;
+
         state.tries += 1;
 
         const { bulls, cows } = evaluateGuess(secret, guess);
+        const roundResult = { guess, bulls, cows };
+        state.history = [...history, roundResult];
 
         if (bulls === guessLength) {
             state.gameStatus = 'won';
@@ -241,9 +250,6 @@ export const GuessForm = ({
 
             return;
         }
-
-        const roundResult = { guess, bulls, cows };
-        state.history = [...history, roundResult];
 
         state.guess = [];
         update();
