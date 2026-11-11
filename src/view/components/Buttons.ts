@@ -27,15 +27,6 @@ const Button = ({ classes = '', text, onClick }: ButtonProps): HTMLButtonElement
 export const GameActionButton = (status: GameStatus, onClick: () => void, classes: string = 'btn'): HTMLButtonElement =>
     Button({ text: buttonText[status], onClick, classes });
 
-export const StartGameButton = (onStartGame: () => void): HTMLButtonElement =>
-    Button({ text: buttonText.ready, onClick: onStartGame });
-
-export const GiveUpButton = (onGiveUp: () => void): HTMLButtonElement =>
-    Button({ text: buttonText.gaveUp, onClick: onGiveUp });
-
-export const NewGameButton = (onNewGame: () => void): HTMLButtonElement =>
-    Button({ text: buttonText.won, onClick: onNewGame });
-
 export const CloseButton = (onClose: () => void): HTMLButtonElement => {
     const button = Button({
         classes: 'modal-close',
@@ -48,4 +39,5 @@ export const CloseButton = (onClose: () => void): HTMLButtonElement => {
     return button;
 };
 
-export const LeaderboardButton = () => Button({ classes: 'btn btn-lg', text: 'LeaderBoard', onClick: () => {} });
+export const LeaderboardButton = (onSwowModal: () => void) =>
+    Button({ classes: 'btn btn-lg', text: 'LeaderBoard', onClick: onSwowModal });

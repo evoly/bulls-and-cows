@@ -9,6 +9,7 @@ import { createKeboardButtons } from './components/createKeboardButtons';
 
 import { state } from '../state/state';
 import { BASES_CONFIG } from '../state/stateConfig';
+import { BaseKey } from '../state/stateConfig';
 
 type GuessFormProps = {
     onHistoryChange: () => void;
@@ -203,29 +204,42 @@ export const GuessForm = ({
             createWinModal(state.tries, formatTime(time));
 
             type Game = {
-                id: string;
-                title: string;
                 tries: number;
-                date: Date;
+                date: number;
                 time: number;
+                base: string;
+                length: number;
             };
 
-            const stored = localStorage.getItem('bulls-and-cows-bestgames');
-            let bestGames: Game[] = [];
+            type BestGames = Partial<Record<BaseKey, Game[]>>;
+
+            const storageKey = 'bulls-and-cows-bestgames';
+            const stored = localStorage.getItem(storageKey);
+
+            let bestGames: BestGames = {};
 
             if (stored) {
                 try {
                     bestGames = JSON.parse(stored);
                 } catch {
-                    throw new Error('can parse data from localstorage');
+                    throw new Error('Cannot parse data from localStorage');
                 }
             }
 
-            const date = Date.now();
-            const newResult = { tries: state.tries, time, base: currentBase, length: guessLength, date };
-            const sorted = [...bestGames, newResult].sort((a, b) => a.tries - b.tries || a.time - b.time);
-            const storageUpdated = sorted.slice(0, 10);
-            localStorage.setItem('bulls-and-cows-bestgames', JSON.stringify(storageUpdated));
+            const newResult: Game = {
+                tries: state.tries,
+                time,
+                base: currentBase,
+                length: guessLength,
+                date: Date.now(),
+            };
+
+            const currentResults = bestGames[currentBase] ?? [];
+            bestGames[currentBase] = [...currentResults, newResult]
+                .sort((a, b) => a.tries - b.tries || a.time - b.time)
+                .slice(0, 10);
+
+            localStorage.setItem(storageKey, JSON.stringify(bestGames));
 
             return;
         }

@@ -5,6 +5,7 @@ import { GuessForm } from './GuessForm';
 import { Options } from './components/Options';
 import { createHistoryCards } from './components/createHistoryCards';
 import { Timer } from './components/Timer';
+import { createLeaderBoard } from './Modals';
 
 import { generateSecret } from '../logic/generateSecret';
 
@@ -73,11 +74,9 @@ const mainContent = () => {
             startButton.classList.add('hidden');
             info.classList.remove('hidden');
             updateActionButtons();
-
-            //add giveup bitton to gameBoard here
-
-            // behavior: fill inputBoxes, set gamestatus 'gaveUp' add new game button to gamedoard
         }, 1200);
+
+        console.log(state.secret);
     };
 
     const handleGiveUp = () => {
@@ -137,7 +136,7 @@ const mainContent = () => {
 export default () => {
     return [
         Header({
-            onShowLeaderboard: () => {},
+            onShowLeaderboard: createLeaderBoard,
         }),
         mainContent(),
     ];

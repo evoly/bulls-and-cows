@@ -1,35 +1,61 @@
-import { createEl } from './../helpers';
+import { createEl, formatTime } from './../helpers';
 
+import { state } from '../state/state';
+import { BASES_CONFIG, type BaseKey } from '../state/stateConfig';
+import createResultTable, { type LeaderboardData } from './components/ResultTable';
 import createModal from './components/Modal';
-// import createTable from "./components/ResultTable";
 
 // import { createFireworks } from './fireworks';
-/*
-interface BestGame {
+type Game = {
     tries: number;
-    date: string;
-    time: string;
+    date: number;
+    time: number; // elapsed seconds
+    base: BaseKey;
     length: number;
-    radix: number;
-}
+};
 
-const createLeaderBoard = () => {
-    const stored = localStorage.getItem('bestgames');
-    const bestGames: BestGame[] = stored ? JSON.parse(stored) : [];
+type BestGames = Partial<Record<BaseKey, Game[]>>;
 
-    if (!bestGames) {
-        const emptyTableText = createEl('div');
-        emptyTableText.textContent = 'Nothing here yet';
-        return createModal([emptyTableText]);
+const STORAGE_KEY = 'bulls-and-cows-bestgames';
+
+const getBestGames = (): BestGames => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return {};
+
+    try {
+        const parsed: unknown = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+            return parsed as BestGames;
+        }
+    } catch {
+        console.warn('Cannot parse leaderboard data from localStorage');
     }
 
-    bestGames.forEach(game => {
-        game.date = new Date(game.date).toLocaleDateString('ru');
+    return {};
+};
+
+const prepareResults = (bestGames: BestGames): LeaderboardData => {
+    const result: LeaderboardData = {};
+
+    (Object.keys(BASES_CONFIG) as BaseKey[]).forEach((base) => {
+        const games = bestGames[base];
+        result[base] = (Array.isArray(games) ? games : []).map((game) => ({
+            tries: String(game.tries),
+            time: formatTime(game.time),
+            length: String(game.length),
+            date: new Date(game.date).toLocaleDateString('en-GB'),
+        }));
     });
 
-    return createModal(createTable(bestGames));
+    return result;
 };
-*/
+
+export const createLeaderBoard = () => {
+    const results = prepareResults(getBestGames());
+    const content = createResultTable(results, state.currentBase);
+
+    return createModal([content]);
+};
 
 export const createWinModal = (tries: number, time: string) => {
     const header = createEl('h2');

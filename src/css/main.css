@@ -10,17 +10,6 @@
     --modalbackprop: #2f2a21f2;
 
     --transition: all ease-in 0.3s;
-
-    --main-color: #431961;
-    --footer-color: rgba(210, 188, 219, 42%);
-    --track-color: rgba(210, 188, 219, 49%);
-    --duration-color: #f4eaea;
-    --player-background: #230339;
-    --card-background: #5c0e63;
-    --modal-background: #320935;
-    --second-color: #6942d517;
-    --text-light: #e2e4ee;
-    --text-light-xl: #784949;
 }
 
 * {
@@ -270,6 +259,11 @@ p {
     pointer-events: none;
 }
 
+.options-note {
+    font-style: italic;
+    color: var(--text-color-light);
+}
+
 .game-form {
     margin-bottom: 20px;
 }
@@ -467,7 +461,30 @@ p {
     }
 
     tr {
-        border-bottom: 1px solid var(--card-background);
+        border-bottom: 1px solid var(--card-border);
+    }
+}
+
+.results-tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.results-tab {
+    background-color: var(--btn-background);
+    border: 2px solid var(--btn-text);
+    border-radius: 7%;
+    padding: 7px 15px;
+    transition: var(--transition);
+    cursor: pointer;
+
+    &.active {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    &:hover {
+        background-color: var(--background-color);
     }
 }
 

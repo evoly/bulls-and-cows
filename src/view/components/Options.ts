@@ -3,6 +3,8 @@ import { BASES_CONFIG } from '../../state/stateConfig';
 import { BaseKey } from '../../state/stateConfig';
 import { state } from '../../state/state';
 
+import { countPossibleSecrets } from '../../logic/countPossibleSecrets';
+
 type OptionsProps = { onChange?: () => void };
 
 const MIN_LENGTH = 2;
@@ -73,7 +75,16 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
     lengthSelector.append(...lengthButtons);
     fieldsetLength.append(legendLength, fakeLegendLength, lengthSelector);
 
-    container.append(h2, fieldsetBase, fieldsetLength, startButton, info);
+    const possibilitiesEl = createEl('p', { className: 'options-note' });
+
+    function updatePossibilities() {
+        const possibilities = countPossibleSecrets(state.guessLength, BASES_CONFIG[state.currentBase].value);
+        possibilitiesEl.textContent = `Fun fact: There are ${possibilities.toLocaleString()} possible secret codes for these settings!`;
+    }
+
+    updatePossibilities();
+
+    container.append(h2, fieldsetBase, fieldsetLength, possibilitiesEl, startButton, info);
 
     container.addEventListener('change', (event) => {
         const target = event.target;
@@ -101,6 +112,7 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
         if (target.name === 'length') {
             state.guessLength = Number(target.value);
         }
+        updatePossibilities();
         onChange?.();
         console.log('state', state);
     });
