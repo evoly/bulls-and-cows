@@ -36,16 +36,16 @@ export const GiveUpButton = (onGiveUp: () => void): HTMLButtonElement =>
 export const NewGameButton = (onNewGame: () => void): HTMLButtonElement =>
     Button({ text: buttonText.won, onClick: onNewGame });
 
-export const CloseButton = (): HTMLButtonElement => Button({ text: 'Close', onClick: () => {} });
+export const CloseButton = (onClose: () => void): HTMLButtonElement => {
+    const button = Button({
+        classes: 'modal-close',
+        text: '×',
+        onClick: onClose,
+    });
 
-export const LeaderboardButton = () => Button({ classes: 'btn btn-lg', text: 'LeaderBoard', onClick: () => {} });
+    button.setAttribute('aria-label', 'Close dialog');
 
-/*
-export const GameActionButton = (
-    status: GameStatus,
-    onClick: () => void
-): HTMLButtonElement => {
-    return Button({ text: BUTTON_TEXT[status], onClick });
+    return button;
 };
 
-*/
+export const LeaderboardButton = () => Button({ classes: 'btn btn-lg', text: 'LeaderBoard', onClick: () => {} });

@@ -1,8 +1,9 @@
 import { createEl } from './../helpers';
+import { formatTime } from './../helpers';
 import { createDigitValidator } from '../logic/createDigitValidator';
 import { evaluateGuess } from '../logic/evaluateGuess';
 import { isValidGuess } from '../logic/isValidGuess';
-
+import { createWinModal } from './Modals';
 import { createInputBoxes } from './components/createInputBoxes';
 import { createKeboardButtons } from './components/createKeboardButtons';
 
@@ -199,9 +200,33 @@ export const GuessForm = ({
             const time = timer.getElapsedSeconds();
             console.log('time', time);
 
-            //add timer stop
-            //add modal
-            //add localstorage
+            createWinModal(state.tries, formatTime(time));
+
+            type Game = {
+                id: string;
+                title: string;
+                tries: number;
+                date: Date;
+                time: number;
+            };
+
+            const stored = localStorage.getItem('bulls-and-cows-bestgames');
+            let bestGames: Game[] = [];
+
+            if (stored) {
+                try {
+                    bestGames = JSON.parse(stored);
+                } catch {
+                    throw new Error('can parse data from localstorage');
+                }
+            }
+
+            const date = Date.now();
+            const newResult = { tries: state.tries, time, base: currentBase, length: guessLength, date };
+            const sorted = [...bestGames, newResult].sort((a, b) => a.tries - b.tries || a.time - b.time);
+            const storageUpdated = sorted.slice(0, 10);
+            localStorage.setItem('bulls-and-cows-bestgames', JSON.stringify(storageUpdated));
+
             return;
         }
 

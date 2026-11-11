@@ -407,10 +407,49 @@ p {
     }
 }
 .modal-text-lg {
-    font-size: 2rem;
-    font-size: 600;
+    font-size: 2.5rem;
+    font-weight: 500;
 }
 
+.win-info {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 3px;
+}
+.win-info-item {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+
+    &:first-child {
+        border-right: 1px solid var(--card-border);
+    }
+}
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    width: 32px;
+    height: 32px;
+    padding: 0;
+
+    display: grid;
+    place-items: center;
+
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
 /* table */
 
 .table {

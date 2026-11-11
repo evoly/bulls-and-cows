@@ -101,8 +101,10 @@ const mainContent = () => {
 
         startButton.classList.remove('hidden');
         info.classList.add('hidden');
+        newGameButton.classList.add('hidden');
 
         guessForm.update();
+        updateHistory();
 
         console.log('state new g', state);
     };
