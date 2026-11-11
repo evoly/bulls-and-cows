@@ -1,15 +1,5 @@
 import { createEl } from '../../helpers';
-
-const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    const minutes = mins.toString().padStart(2, '0');
-    const secondsFormatted = secs.toString().padStart(2, '0');
-
-    return hours > 0 ? `${hours}:${minutes}:${secondsFormatted}` : `${minutes}:${secondsFormatted}`;
-};
+import { formatTime } from '../../helpers';
 
 export const Timer = () => {
     const container = createEl('div', { className: 'timer' });
