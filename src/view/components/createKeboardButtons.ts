@@ -6,7 +6,6 @@ export const createKeboardButtons = (digits: string[]) => {
     const buttons = digits.map((digit) => {
         const button = createEl('button', { className: `keyboard-btn`, textContent: digit, type: 'button' });
         button.dataset.value = `${digit}`;
-        // button.addEventListener('click', onClick); add  eventFunction here ?
         return button;
     });
 

@@ -9,7 +9,6 @@ export const createInputBoxes = (guessLength: number): HTMLInputElement[] => {
             maxLength: 1,
             readOnly: true,
         });
-        // TODO
         input.setAttribute('aria-label', `number ${i}`);
         inputs.push(input);
     }

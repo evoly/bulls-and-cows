@@ -10,7 +10,6 @@ const createModal = (content: HTMLElement[]) => {
     const closeModal = CloseButton(() => modal.close());
 
     modalContent.append(...content);
-    // modalFooter.append() new game
     modalInner.append(closeModal, modalContent, modalFooter);
     modal.append(modalInner);
 

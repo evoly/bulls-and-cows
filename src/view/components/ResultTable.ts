@@ -43,7 +43,6 @@ const createTable = (rows: LeaderboardRow[]): HTMLTableElement => {
 };
 
 const createResultTable = (results: LeaderboardData, initialBase: BaseKey): HTMLElement => {
-    console.log('results', results);
     const container = document.createElement('section');
     container.className = 'results';
 

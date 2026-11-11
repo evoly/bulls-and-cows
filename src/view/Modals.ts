@@ -6,7 +6,6 @@ import createResultTable, { type LeaderboardData } from './components/ResultTabl
 import createModal from './components/Modal';
 import { createFireworks } from './components/fireworks';
 
-// import { createFireworks } from './fireworks';
 type Game = {
     tries: number;
     date: number;

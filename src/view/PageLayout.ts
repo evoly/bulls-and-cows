@@ -61,7 +61,6 @@ const mainContent = (): HTMLElement => {
 
     const handleStartGame = () => {
         if (!(state.gameStatus === 'ready')) return;
-        console.log(state);
         state.secret = generateSecret(state.guessLength, state.currentBase);
 
         state.guess = [];
@@ -75,12 +74,6 @@ const mainContent = (): HTMLElement => {
         timer.start();
 
         options.update(true);
-
-        setTimeout(() => {
-            //gameAction.classList.add('is-playing');
-        }, 1200);
-
-        console.log(state.secret);
     };
 
     const handleGiveUp = () => {
@@ -108,8 +101,6 @@ const mainContent = (): HTMLElement => {
 
         guessForm.update();
         updateHistory();
-
-        console.log('state new g', state);
     };
     const startButton = GameActionButton('ready', handleStartGame, 'btn-start');
 

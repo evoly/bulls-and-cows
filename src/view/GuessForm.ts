@@ -195,11 +195,9 @@ export const GuessForm = ({
 
         if (bulls === guessLength) {
             state.gameStatus = 'won';
-            console.log('Gz!');
             timer.stop();
             onWin();
             const time = timer.getElapsedSeconds();
-            console.log('time', time);
 
             createWinModal(state.tries, formatTime(time));
 
@@ -246,7 +244,6 @@ export const GuessForm = ({
 
         const roundResult = { guess, bulls, cows };
         state.history = [...history, roundResult];
-        console.log('state', state);
 
         state.guess = [];
         update();
