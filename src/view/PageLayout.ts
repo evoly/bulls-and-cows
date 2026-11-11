@@ -14,7 +14,7 @@ import { state } from '../state/state';
 const timer = Timer();
 
 const gameInfo = (): HTMLElement => {
-    const gameInfo = createEl('div', { className: 'game-info hidden' });
+    const gameInfo = createEl('div', { className: 'game-info' });
     const hint = createEl('div', { className: 'game-info-item' });
     const span1 = createEl('span', { className: '', textContent: ' 🐂 - right place;' });
     const span2 = createEl('span', { className: '', textContent: '🐄 - wrong place' });
@@ -74,10 +74,10 @@ const mainContent = (): HTMLElement => {
 
         timer.start();
 
+        options.update(true);
+
         setTimeout(() => {
-            startButton.classList.add('hidden');
-            info.classList.remove('hidden');
-            updateActionButtons();
+            //gameAction.classList.add('is-playing');
         }, 1200);
 
         console.log(state.secret);

@@ -84,7 +84,17 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
 
     updatePossibilities();
 
-    container.append(h2, fieldsetBase, fieldsetLength, possibilitiesEl, startButton, info);
+    const gameAction = createEl('div', { className: 'game-action' });
+
+    gameAction.append(startButton, info);
+    const update = (isPlaying: boolean) => {
+        gameAction.classList.toggle('is-playing', isPlaying);
+
+        startButton.inert = isPlaying;
+        info.inert = !isPlaying;
+    };
+
+    container.append(h2, fieldsetBase, fieldsetLength, possibilitiesEl, gameAction);
 
     container.addEventListener('change', (event) => {
         const target = event.target;
@@ -114,7 +124,6 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
         }
         updatePossibilities();
         onChange?.();
-        console.log('state', state);
     });
 
     const setStarted = (isReady: boolean) => {
@@ -124,5 +133,5 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
         h2.textContent = isReady ? 'Game options' : 'Game in progress';
     };
 
-    return { container, setStarted };
+    return { container, setStarted, update };
 };
