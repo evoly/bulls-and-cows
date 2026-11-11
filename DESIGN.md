@@ -29,13 +29,39 @@ The UI calls the logic functions and handles side effects (rendering, timer upda
 
 Both `secret` and `guess` are **arrays of strings**, not numbers. This preserves leading zeroes (for example, `['0', '1', '2', '3']`), supports hexadecimal letters, and makes the position of each digit explicit.
 
-Each history entry has the shape `{ guess: string[], bulls: number, cows: number }`. An **array of objects** is suitable because guesses are shown in chronological order, and each entry keeps the submitted digits and their feedback together. On unsuccessful guesses, `GuessForm` creates a new history array rather than calling `push`:
+Each history entry has the shape `{ guess: string[], bulls: number, cows: number }`. An **array of objects** preserves the chronological order and keeps each guess together with its feedback. The form rejects duplicate guesses using `history.some(...)` and creates a new history array for each accepted guess, including the winning one:
 
 ```ts
-state.history = [...history, { guess, bulls, cows }];
+const roundResult = { guess, bulls, cows };
+updateState({
+    tries: state.tries + 1,
+    history: [...state.history, roundResult],
+});
 ```
 
-Current input is also updated by creating a new array (`[...guess, digit]` or `guess.slice(0, -1)`). The **arrays are updated immutably**, although the containing `state` object is mutable and its properties are reassigned.
+### Immutable state updates
+
+`src/state/state.ts` exposes `state` and an `updateState(updates: Partial<GameState>)` helper. Instead of assigning to `state` properties directly, UI handlers call `updateState` to create a **new state object** using object spread:
+
+```ts
+export const updateState = (updates: Partial<GameState>): void => {
+    state = { ...state, ...updates };
+};
+```
+
+For example, starting a game can replace several properties in a single update:
+
+```ts
+updateState({
+    secret: generateSecret(state.guessLength, state.currentBase),
+    guess: [],
+    history: [],
+    tries: 0,
+    gameStatus: 'playing',
+});
+```
+
+Object spread is **shallow**: array values such as `guess` and `history` are still replaced with newly created arrays (`[...guess, digit]`, `guess.slice(0, -1)`, `[...history, entry]`) rather than modified in place. The `updateState` helper itself changes the module-level state reference, so it is not a pure reducer. UI event handlers still coordinate state transitions; the isolated functions in `src/logic/` contain the independently testable game algorithms.
 
 `BASES_CONFIG` in `src/state/stateConfig.ts` is a `Record<BaseKey, BaseConfig>`. It provides the radix, label, and valid digit alphabet in one place for the UI.
 
@@ -137,10 +163,10 @@ In this application, the available bases are fixed at 2, 8, 10, and 16, and leng
 | **Dependency injection and testability**   | `generateSecret` receives `random` as a parameter instead of hardcoding its source, allowing deterministic unit tests.                                                                                                                  |
 | **Guard clauses**                          | `isValidGuess` exits early on incorrect length or invalid characters; `handleInput` returns when a character is invalid, repeated, or exceeds the chosen length. This avoids unnecessary nesting.                                       |
 | **Explicit types**                         | `GameState`, `GuessResult`, `BaseKey`, and `GameStatus` make the expected shape of state and valid status values clear in TypeScript.                                                                                                   |
-| **Prefer non-mutating collection updates** | `GuessForm.ts` replaces `guess` and `history` arrays rather than modifying those arrays with `push` or `pop`.                                                                                                                           |
+| **Prefer non-mutating collection updates** | `updateState` replaces the `GameState` object, while `GuessForm.ts` creates new `guess` and `history` arrays instead of changing existing arrays with `push` or `pop`.                                                                  |
 
 ## 6. Testing approach
 
 Vitest unit tests in `tests/` exercise each required logic function separately. Tests for `generateSecret` pass controlled random values to avoid nondeterministic outcomes. Other tests cover scoring, hexadecimal case handling, allowed digits, unique digits, and permutation counts. The required algorithms were developed using separate tests-first and implementation commits (TDD).
 
-The core logic is kept outside UI code so these tests can run in Node without constructing DOM elements or relying on browser storage.
+The five required algorithms remain independent of DOM code, so their tests can run in Node without constructing browser elements or using `localStorage`. Game lifecycle and UI handlers are separate from these pure algorithms; `updateState` is a small state-management helper rather than a pure transition function.
