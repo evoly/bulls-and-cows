@@ -4,7 +4,7 @@
     --background-color: #fbf7ee;
     --btn-text: #7a4d06;
     --btn-background: #fff;
-    --btn-hover: --background-color;
+    --btn-hover: var(--background-color);
     --card-border: #e4dccb;
     --dark-background: #f6efe0;
     --modalbackprop: #2f2a21f2;
@@ -126,7 +126,6 @@ p {
     transform: rotateX(-180deg);
 }
 
-/* Game started */
 .game-action.is-playing .btn-start {
     transform: rotateX(180deg);
 }

@@ -74,6 +74,7 @@ const mainContent = (): HTMLElement => {
         timer.start();
 
         options.update(true);
+        updateActionButtons();
     };
 
     const handleGiveUp = () => {
@@ -95,11 +96,10 @@ const mainContent = (): HTMLElement => {
 
         options.setStarted(true);
 
-        startButton.classList.remove('hidden');
-        info.classList.add('hidden');
-        newGameButton.classList.add('hidden');
+        updateActionButtons();
 
         guessForm.update();
+        options.update(false);
         updateHistory();
     };
     const startButton = GameActionButton('ready', handleStartGame, 'btn-start');
@@ -114,7 +114,6 @@ const mainContent = (): HTMLElement => {
 
     const updateActionButtons = () => {
         giveUpButton.classList.toggle('hidden', state.gameStatus !== 'playing');
-
         newGameButton.classList.toggle('hidden', state.gameStatus !== 'won' && state.gameStatus !== 'gaveUp');
     };
 
