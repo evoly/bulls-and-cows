@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Bulls and Cows logo</title>
+  <desc id="desc">A friendly dark bull's head on a rounded golden square.</desc>
+  <rect x="0" y="0" width="512" height="512" rx="118" fill="#F0A629"/>
+  <g fill="#1D2520">
+    <!-- Horns -->
+    <path d="M159 188 C115 172 100 135 107 86 C109 70 119 64 126 84 C149 142 197 158 225 166 L245 177 L215 215 Z"/>
+    <path d="M353 188 C397 172 412 135 405 86 C403 70 393 64 386 84 C363 142 315 158 287 166 L267 177 L297 215 Z"/>
+    <!-- Head -->
+    <path d="M256 165 C190 165 148 200 148 268 L148 324 C148 386 193 412 256 412 C319 412 364 386 364 324 L364 268 C364 200 322 165 256 165 Z"/>
+    <!-- Ears -->
+    <ellipse cx="144" cy="252" rx="58" ry="31" transform="rotate(-12 144 252)"/>
+    <ellipse cx="368" cy="252" rx="58" ry="31" transform="rotate(12 368 252)"/>
+  </g>
+  <!-- Happy closed eyes -->
+  <path d="M191 257 C191 228 227 228 227 257" fill="none" stroke="#FFF7E6" stroke-width="13" stroke-linecap="round"/>
+  <path d="M285 257 C285 228 321 228 321 257" fill="none" stroke="#FFF7E6" stroke-width="13" stroke-linecap="round"/>
+  <!-- Muzzle -->
+  <ellipse cx="256" cy="337" rx="92" ry="63" fill="#FFF7E6"/>
+  <ellipse cx="220" cy="341" rx="11" ry="17" fill="#1D2520"/>
+  <ellipse cx="292" cy="341" rx="11" ry="17" fill="#1D2520"/>
+</svg>
