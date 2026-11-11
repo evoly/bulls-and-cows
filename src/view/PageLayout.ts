@@ -10,6 +10,7 @@ import { createLeaderBoard } from './Modals';
 import { generateSecret } from '../logic/generateSecret';
 
 import { state } from '../state/state';
+import { updateState } from '../state/state';
 
 const timer = Timer();
 
@@ -61,12 +62,13 @@ const mainContent = (): HTMLElement => {
 
     const handleStartGame = () => {
         if (!(state.gameStatus === 'ready')) return;
-        state.secret = generateSecret(state.guessLength, state.currentBase);
-
-        state.guess = [];
-        state.history = [];
-        state.tries = 0;
-        state.gameStatus = 'playing';
+        updateState({
+            secret: generateSecret(state.guessLength, state.currentBase),
+            guess: [],
+            history: [],
+            tries: 0,
+            gameStatus: 'playing',
+        });
 
         options.setStarted(false);
         guessForm.update();
@@ -80,7 +82,7 @@ const mainContent = (): HTMLElement => {
     const handleGiveUp = () => {
         if (state.gameStatus !== 'playing') return;
 
-        state.gameStatus = 'gaveUp';
+        updateState({ gameStatus: 'gaveUp' });
         timer.stop();
 
         guessForm.revealSecret();
@@ -88,11 +90,13 @@ const mainContent = (): HTMLElement => {
     };
 
     const handleNewGame = () => {
-        state.guess = [];
-        state.history = [];
-        state.tries = 0;
-        state.gameStatus = 'ready';
-        state.secret = [];
+        updateState({
+            guess: [],
+            history: [],
+            tries: 0,
+            gameStatus: 'ready',
+            secret: [],
+        });
 
         options.setStarted(true);
 

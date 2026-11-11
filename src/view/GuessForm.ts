@@ -10,6 +10,7 @@ import { createKeboardButtons } from './components/createKeboardButtons';
 import { state } from '../state/state';
 import { BASES_CONFIG } from '../state/stateConfig';
 import { BaseKey } from '../state/stateConfig';
+import { updateState } from '../state/state';
 
 type GuessFormProps = {
     onHistoryChange: () => void;
@@ -34,7 +35,7 @@ const handleInput = (char: string, inputs: HTMLInputElement[], buttons: HTMLButt
     const numberOfGuess = guess.length;
 
     const newGuess = [...guess, normalizedChar];
-    state.guess = newGuess;
+    updateState({ guess: newGuess });
 
     inputs[numberOfGuess]!.value = normalizedChar;
 
@@ -57,7 +58,7 @@ const handleBackspace = (inputs: HTMLInputElement[], buttons: HTMLButtonElement[
 
     const lastChar = guess[guess.length - 1];
     const newGuess = guess.slice(0, -1);
-    state.guess = newGuess;
+    updateState({ guess: newGuess });
 
     inputs[guess.length - 1]!.value = '';
 
@@ -196,14 +197,14 @@ export const GuessForm = ({
 
         if (isDuplicate) return;
 
-        state.tries += 1;
+        updateState({ tries: state.tries + 1 });
 
         const { bulls, cows } = evaluateGuess(secret, guess);
         const roundResult = { guess, bulls, cows };
-        state.history = [...history, roundResult];
+        updateState({ history: [...history, roundResult] });
 
         if (bulls === guessLength) {
-            state.gameStatus = 'won';
+            updateState({ gameStatus: 'won' });
             timer.stop();
             onWin();
             const time = timer.getElapsedSeconds();
@@ -251,7 +252,7 @@ export const GuessForm = ({
             return;
         }
 
-        state.guess = [];
+        updateState({ guess: [] });
         update();
         onHistoryChange();
     });

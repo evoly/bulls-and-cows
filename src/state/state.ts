@@ -17,7 +17,7 @@ type GameState = {
     secret: string[];
 };
 
-export const state: GameState = {
+export let state: GameState = {
     gameStatus: 'ready',
     currentBase: 'hex',
     guess: [],
@@ -25,4 +25,8 @@ export const state: GameState = {
     history: [],
     tries: 0,
     guessLength: 4,
+};
+
+export const updateState = (updates: Partial<GameState>): void => {
+    state = { ...state, ...updates };
 };

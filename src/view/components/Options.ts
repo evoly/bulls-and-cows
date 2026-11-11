@@ -2,6 +2,7 @@ import { createEl } from '../../helpers';
 import { BASES_CONFIG } from '../../state/stateConfig';
 import { BaseKey } from '../../state/stateConfig';
 import { state } from '../../state/state';
+import { updateState } from '../../state/state';
 
 import { countPossibleSecrets } from '../../logic/countPossibleSecrets';
 
@@ -109,18 +110,18 @@ export const Options = ({ onChange }: OptionsProps = {}, startButton: HTMLElemen
             });
 
             if (!isLengthAllowed(state.guessLength, selectedBase)) {
-                state.guessLength = MIN_LENGTH;
+                updateState({ guessLength: MIN_LENGTH });
 
                 const minLengthInput = lengthInputs.find((input) => Number(input.value) === MIN_LENGTH);
 
                 if (minLengthInput) minLengthInput.checked = true;
             }
 
-            state.currentBase = selectedBase;
+            updateState({ currentBase: selectedBase });
         }
 
         if (target.name === 'length') {
-            state.guessLength = Number(target.value);
+            updateState({ guessLength: Number(target.value) });
         }
         updatePossibilities();
         onChange?.();
